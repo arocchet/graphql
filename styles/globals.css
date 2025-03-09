@@ -1,0 +1,306 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --white0: #ffffff;
+  --white5: #f7f7f7;
+  --white10: #ededed;
+  --white15: #e3e3e3;
+  --black70: #534e57;
+  --black75: #333036;
+  --black80: #272529;
+  --black85: #222024;
+  --black90: #1a191c;
+  --grey10: #e8e1f0;
+  --grey15: #d9d9d9;
+  --grey25: #bdbdbd;
+  --grey30: #b2acb8;
+  --grey50: #807f7f;
+  --grey60: #6b6a6a;
+  --grey65: #595959;
+  --grey70: #4f4f4f;
+  --grey75: #3f3f3f;
+  --grey80: #333333;
+  --grey90: #1a1a1a;
+  --red10: #ffebee;
+  --red20: #ffcdd2;
+  --red25: #ea8a98;
+  --red30: #ef9a9a;
+  --red35: #e66a7d;
+  --red40: #e57373;
+  --red45: #e63e61;
+  --red50: #ef5350;
+  --red55: #f44336;
+  --red60: #c90054;
+  --red65: #d32f2f;
+  --red70: #b71c1c;
+  --yellow10: #fffde7;
+  --yellow20: #fff9c4;
+  --yellow25: #fff59d;
+  --yellow30: #fff176;
+  --yellow35: #ffee58;
+  --yellow40: #ffeb3b;
+  --yellow45: #fdd835;
+  --yellow50: #fbc02d;
+  --yellow55: #f0bb00;
+  --yellow60: #f9a825;
+  --yellow65: #bd9300;
+  --yellow70: #f57f17;
+  --yellow75: #8a6400;
+  --green10: #e8f5e9;
+  --green20: #c8e6c9;
+  --green25: #a5d6a7;
+  --green30: #81c784;
+  --green35: #66bb6a;
+  --green40: #4caf50;
+  --green45: #43a047;
+  --green50: #388e3c;
+  --green55: #00ed4f;
+  --green60: #2e7d32;
+  --green65: #00ad39;
+  --green70: #1b5e20;
+  --green75: #007a22;
+  --pink10: #fce4ec;
+  --pink15: #f8bbd0;
+  --pink20: #f699ff;
+  --pink25: #f48fb1;
+  --pink30: #f06292;
+  --pink35: #e657ff;
+  --pink40: #ec407a;
+  --pink45: #e91e63;
+  --pink50: #d81b60;
+  --pink55: #c2185b;
+  --pink60: #ad00c9;
+  --pink65: #880e4f;
+  --pink70: #560027;
+  --orange10: #fff3e0;
+  --orange20: #ffe0b2;
+  --orange25: #ffcc80;
+  --orange30: #ffb74d;
+  --orange35: #ffa726;
+  --orange40: #ff9800;
+  --orange45: #fb8c00;
+  --orange50: #f57c00;
+  --orange55: #ef6c00;
+  --orange60: #e6714c;
+  --orange65: #ba4020;
+  --orange70: #ff7043;
+  --orange75: #ff5722;
+  --purple10: #d7c2ff;
+  --purple15: #caadff;
+  --purple20: #b795ff;
+  --purple30: #9969ff;
+  --purple40: #7538ff;
+  --purple45: #601aff;
+  --purple45: #601aff;
+  --blue50: #00cbf5;
+  --blue55: #5ea2ef;
+  --blue60: #00a3c7;
+  --blue65: #0072f5;
+  --blue75: #00748a;
+  --orange25: #ffa482;
+  --orange40: #e6714c;
+  --orange55: #ba4020;
+  --yellow55: #f0bb00;
+  --yellow65: #bd9300;
+  --yellow75: #8a6400;
+  --green55: #00ed4f;
+  --green65: #00ad39;
+  --green75: #007a22;
+  --pink20: #f699ff;
+  --pink35: #e657ff;
+  --pink60: #ad00c9;
+  --teal45: #5ac2a9;
+  --teal60: #00d4a1;
+  --teal65: #00ab81;
+  --teal75: #007864;
+
+  --white: var(--white0);
+  --black: var(--grey90);
+  --redFill: var(--red45);
+  --redFillAlt: var(--red35);
+  --tealAlt: var(--teal45);
+  --tealFill: var(--teal65);
+  --tealFillAlt: var(--teal45);
+  --purpleFill: var(--purple30);
+  --purpleFillAlt: var(--purple20);
+  --blueFill: var(--blue60);
+  --orangeFill: var(--orange40);
+  --yellowFill: var(--yellow65);
+  --greenFill: var(--green65);
+  --pinkFill: var(--pink35);
+  --greyFill: var(--grey50);
+  --bgLevel5: var(--black70);
+
+  --cyan10: #e0ffff;
+  --cyan20: #b2ffff;
+  --cyan30: #80ffff;
+  --cyan40: #4dffff;
+  --cyan50: #1affff;
+  --cyan60: #00e5e5;
+  --cyan70: #00b2b2;
+  --cyan80: #008080;
+  --cyan90: #004d4d;
+
+  --cyanFill: var(--cyan60);
+
+  --lime10: #f0ffe0;
+  --lime20: #e0ffb2;
+  --lime30: #d0ff80;
+  --lime40: #c0ff4d;
+  --lime50: #b0ff1a;
+  --lime60: #99e600;
+  --lime70: #80b200;
+  --lime80: #668000;
+  --lime90: #4d4d00;
+
+  --brown10: #f5e0d0;
+  --brown20: #e6c0a0;
+  --brown30: #d6a080;
+  --brown40: #c68060;
+  --brown50: #b66040;
+  --brown60: #a65020;
+  --brown70: #804000;
+  --brown80: #603000;
+  --brown90: #402000;
+
+  --magenta10: #ffe0f0;
+  --magenta20: #ffb2d0;
+  --magenta30: #ff80b0;
+  --magenta40: #ff4d90;
+  --magenta50: #ff1a70;
+  --magenta60: #e60060;
+  --magenta70: #b20050;
+  --magenta80: #800040;
+  --magenta90: #4d0020;
+
+  background-color: var(--bgLevel2);
+}
+
+.dark {
+  --neutral: var(--grey10);
+  --neutralAlt: var(--white);
+  --neutralFill: var(--grey15);
+  --neutralFillAlt: var(--white);
+  --neutralOnFill: var(--grey90);
+  --red: var(--red45);
+  --redAlt: var(--red25);
+  --teal: var(--teal60);
+  --purple: var(--purple15);
+  --purpleAlt: var(--purple10);
+  --blue: var(--blue55);
+  --orange: var(--orange25);
+  --yellow: var(--yellow55);
+  --green: var(--green55);
+  --pink: var(--pink20);
+  --grey: var(--grey25);
+  --greyHighlighted: var(--grey15);
+  --greyHighlightedAlt: var(--white);
+  --bgLevel1: var(--black90);
+  --bgLevel2: var(--black85);
+  --bgLevel3: var(--black80);
+  --bgLevel4: var(--black75);
+  --textNeutral: var(--white10);
+  --textMinimal: var(--grey25);
+
+  --detailNeutral: var(--white);
+  --detailMinimal: var(--grey25);
+}
+
+.light {
+  --neutral: var(--grey90);
+  --neutralAlt: var(--grey60);
+  --neutralFill: var(--grey80);
+  --neutralFillAlt: var(--grey65);
+  --neutralOnFill: var(--white);
+  --red: var(--red60);
+  --redAlt: var(--red35);
+  --teal: var(--teal75);
+  --purple: var(--purple40);
+  --purpleAlt: var(--purple45);
+  --blue: var(--blue65);
+  --orange: var(--orange40);
+  --yellow: var(--yellow55);
+  --green: var(--green65);
+  --pink: var(--pink60);
+  --grey: var(--grey60);
+  --greyHighlighted: var(--grey75);
+  --greyHighlightedAlt: var(--grey50);
+  --bgLevel1: var(--white5);
+  --bgLevel2: var(--white10);
+  --bgLevel3: var(--white15);
+  --textNeutral: var(--grey80);
+  --textMinimal: var(--grey65);
+
+  --detailNeutral: var(--white);
+  --detailMinimal: var(--grey25);
+}
+
+.GridContainer {
+  width: 60vw;
+
+  display: grid;
+  grid-template-areas:
+    "level event event audit-ratio"
+    "level audit skills skills"
+    "xp xp skills skills";
+
+  grid-gap: 0.5vmax;
+}
+
+@media (max-width: 1050px) {
+  .GridContainer {
+    grid-gap: 2vmax;
+    width: 90vw;
+    grid-template-areas:
+      "level skills"
+      "event audit-ratio"
+      "audit xp"
+  }
+}
+
+@media (max-width: 450px) {
+  .GridContainer {
+    grid-gap: 2vmax;
+    width: 90vw;
+    grid-template-areas:
+      "level"
+      "event"
+      "audit-ratio"
+      "audit"
+      "skills"
+      "xp";
+  }
+}
+
+
+.item {
+  background-color: var(--bgLevel3);
+  display: flex;
+  justify-content: center;
+}
+
+.item-1 {
+  grid-area: level;
+}
+
+.item-2 {
+  grid-area: event;
+}
+
+.item-3 {
+  grid-area: audit-ratio;
+}
+
+.item-4 {
+  grid-area: audit;
+}
+
+.item-5 {
+  grid-area: skills;
+}
+
+.item-6 {
+  grid-area: xp;
+}
