@@ -7,7 +7,7 @@ import HeroCard from "./hero-card";
 import BannerComponent from "../ui/banner";
 import ActionCard from "../action-card";
 import Spacer from "../ui/spacer";
-import { ProfileGrid } from "../ui/profile-grid";
+import { ProfileGrid } from "../ui/profile-grid-demo";
 
 export const HeroSection = () => {
   const gradient = "bg-clip-text text-transparent bg-gradient-to-b";
