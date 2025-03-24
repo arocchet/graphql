@@ -34,7 +34,7 @@ export default function LoginComponent() {
           color: "success",
         });
         setTimeout(() => {
-          window.location.href = "/";
+          window.location.href = "/dashboard";
         }
         , 1000);
       } else {
