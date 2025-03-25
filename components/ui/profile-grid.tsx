@@ -1,3 +1,4 @@
+"use client"
 import {
   Card,
   CardHeader,
@@ -23,6 +24,8 @@ import {
   Avatar,
   AvatarGroup,
 } from "@heroui/react";
+
+import * as d3 from "d3";
 
 const formatBytes = (bytes: number, divide = false) => {
   const sizes = ["B", "kB", "MB", "GB", "TB"];
@@ -161,10 +164,10 @@ export const ProfileGrid = ({ id }: ProfileGridProps) => {
       {data && (
         <>
           <Card1 data={data?.user} />
-          <Card2 data={data?.transaction_aggregate} />
+          <Card2 data={data} />
           <Card3 data={data?.user} />
           <Card4 data={data?.user} />
-          <Card5 data={data?.user?.events} />
+          <Card5 data={{transactions: data?.transaction}} />
           <Card6
             data={{
               xp: {
@@ -413,10 +416,112 @@ export const Card1 = (props: any) => {
 };
 
 export const Card2 = (data: any) => {
+  const transactions = data.data.transaction;
+
+  // Prepare data for the chart with cumulative XP
+  const chartData = transactions.map((transaction: any) => ({
+    date: new Date(transaction.createdAt),
+    xp: transaction.amount,
+  }));
+
+  // Sort data by date
+  chartData.sort((a: any, b: any) => a.date.getTime() - b.date.getTime());
+
+  // Calculate cumulative XP
+  let cumulativeXP = 0;
+  const cumulativeChartData = chartData.map((d: any) => {
+    cumulativeXP += d.xp;
+    return { ...d, cumulativeXP };
+  });
+
+  // Set up dimensions
+  const width = 200;
+  const height = 150;
+  const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+
+  // Scales
+  const xScale = d3
+    .scaleTime()
+    .domain(d3.extent(cumulativeChartData, (d: { date: Date }) => d.date) as [Date, Date])
+    .range([margin.left, width - margin.right]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(cumulativeChartData, (d: { cumulativeXP: number }) => d.cumulativeXP) || 0])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+
+  // Line generator for cumulative XP
+  const line = d3
+    .line()
+    .x((d: any) => xScale(d.date))
+    .y((d: any) => yScale(d.cumulativeXP))
+    .curve(d3.curveMonotoneX);
+
   return (
     <GridCard area="item-2">
       <div className="self-start text-sm sm:text-base md:text-lg py-5">
-        Progression
+        <div className="text-center">Progression</div>
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          preserveAspectRatio="xMinYMin meet"
+          className="w-full h-auto"
+        >
+          {/* X-axis */}
+          <g
+            transform={`translate(0, ${height - margin.bottom})`}
+            className="text-[0.5rem] text-[var(--textMinimal)]"
+          >
+            {xScale.ticks(5).map((tick: Date, index: number) => (
+              <text
+                key={index}
+                x={xScale(tick)}
+                y={15}
+                textAnchor="middle"
+                fill="currentColor"
+              >
+                {d3.timeFormat("%b %d")(tick)}
+              </text>
+            ))}
+          </g>
+
+          {/* Y-axis */}
+          <g
+            transform={`translate(${margin.left}, 0)`}
+            className="text-[0.5rem] text-[var(--textMinimal)]"
+          >
+            {yScale.ticks(5).map((tick: number, index: number) => (
+              <text
+                key={index}
+                x={-10}
+                y={yScale(tick) + 4}
+                textAnchor="end"
+                fill="currentColor"
+              >
+                {tick}
+              </text>
+            ))}
+          </g>
+
+          {/* Line path */}
+          <path
+            d={line(cumulativeChartData) || ""}
+            fill="none"
+            stroke="var(--purpleFill)"
+            strokeWidth="2"
+          />
+
+          {/* Data points */}
+            {cumulativeChartData.map((d: { date: Date; cumulativeXP: number }, index: number) => (
+            <circle
+              key={index}
+              cx={xScale(d.date)}
+              cy={yScale(d.cumulativeXP)}
+              r="3"
+              fill="var(--purpleFill)"
+            />
+            ))}
+        </svg>
       </div>
     </GridCard>
   );
@@ -646,26 +751,140 @@ export const Card4 = (props: any) => {
 };
 
 export const Card5 = (data: any) => {
+  const transactions = data.data.transactions;
+
+  // Prepare data for the chart with transaction counts
+  const transactionCounts: { [key: string]: number } = {};
+  transactions.forEach((transaction: any) => {
+    const date = new Date(transaction.createdAt).toISOString().split("T")[0];
+    transactionCounts[date] = (transactionCounts[date] || 0) + 1;
+  });
+
+  const chartData = Object.entries(transactionCounts).map(([date, count]) => ({
+    date: new Date(date),
+    count,
+  }));
+
+  // Sort data by date
+  chartData.sort((a: any, b: any) => a.date.getTime() - b.date.getTime());
+
+  // Set up dimensions
+  const width = 400;
+  const height = 200;
+  const margin = { top: 20, right: 30, bottom: 30, left: 50 };
+
+  // Scales
+  const xScale = d3
+    .scaleTime()
+    .domain(d3.extent(chartData, (d: { date: Date }) => d.date) as [Date, Date])
+    .range([margin.left, width - margin.right]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(chartData, (d: { count: number }) => d.count) || 0])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+
+  // Line generator for transaction counts
+  const line = d3
+    .line()
+    .x((d: any) => xScale(d.date))
+    .y((d: any) => yScale(d.count))
+    .curve(d3.curveMonotoneX);
+
   return (
     <GridCard area="item-5">
       <div className="self-start py-5 text-sm sm:text-base md:text-lg">
-        <div>Distribution of users by XP</div>
+        <div>Number of Audit</div>
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          preserveAspectRatio="xMinYMin meet"
+          className="w-full h-auto mt-4"
+        >
+          {/* Grid lines */}
+          <g>
+            {yScale.ticks(5).map((tick, index) => (
+              <line
+                key={index}
+                x1={margin.left}
+                x2={width - margin.right}
+                y1={yScale(tick)}
+                y2={yScale(tick)}
+                stroke="var(--textMinimal)"
+                strokeDasharray="4"
+              />
+            ))}
+          </g>
 
-        <div className="mt-10">
-          {/*  <RadarChart data={chartData} width={150} height={150}>
-                <PolarGrid gridType="circle" />
-                <PolarAngleAxis dataKey="month" />
-                <Radar
-                  dataKey="desktop"
-                  fill="var(--blue)"
-                  fillOpacity={0.6}
-                  dot={{
-                    r: 4,
-                    fillOpacity: 1,
-                  }}
-                />
-              </RadarChart> */}
-        </div>
+          {/* X-axis */}
+          <g
+            transform={`translate(0, ${height - margin.bottom})`}
+            className="text-[0.7rem] text-[var(--textMinimal)]"
+          >
+            <line
+              x1={margin.left}
+              x2={width - margin.right}
+              y1={0}
+              y2={0}
+              stroke="var(--textMinimal)"
+            />
+            {xScale.ticks(5).map((tick: Date, index: number) => (
+              <text
+                key={index}
+                x={xScale(tick)}
+                y={15}
+                textAnchor="middle"
+                fill="currentColor"
+              >
+                {d3.timeFormat("%b %d")(tick)}
+              </text>
+            ))}
+          </g>
+
+          {/* Y-axis */}
+          <g
+            transform={`translate(${margin.left}, 0)`}
+            className="text-[0.7rem] text-[var(--textMinimal)]"
+          >
+            <line
+              x1={0}
+              x2={0}
+              y1={margin.top}
+              y2={height - margin.bottom}
+              stroke="var(--textMinimal)"
+            />
+            {yScale.ticks(5).map((tick: number, index: number) => (
+              <text
+                key={index}
+                x={-10}
+                y={yScale(tick) + 4}
+                textAnchor="end"
+                fill="currentColor"
+              >
+                {tick}
+              </text>
+            ))}
+          </g>
+
+          {/* Line path */}
+          <path
+            d={line(chartData) || ""}
+            fill="none"
+            stroke="var(--blue)"
+            strokeWidth="2"
+          />
+
+          {/* Data points */}
+          {chartData.map((d: { date: Date; count: number }, index: number) => (
+            <circle
+              key={index}
+              cx={xScale(d.date)}
+              cy={yScale(d.count)}
+              r="4"
+              fill="var(--blue)"
+            />
+          ))}
+        </svg>
       </div>
     </GridCard>
   );

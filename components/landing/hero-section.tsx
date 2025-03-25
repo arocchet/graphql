@@ -70,8 +70,9 @@ export const HeroSection = () => {
           radius="full"
           size="lg"
           className="bg-[var(--blue65)] text-white"
+          
         >
-          Connectez-vous
+          <a href="/login">Connectez-vous</a>
         </Button>
       </div>
     </section>
