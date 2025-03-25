@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Card,
   CardHeader,
@@ -121,13 +121,16 @@ export const ProfileGrid = ({ id }: ProfileGridProps) => {
 
     const fetchData = async () => {
       try {
+        const sessionCookie =
+          typeof document !== "undefined"
+            ? document.cookie.match(/session=([^;]+)/)?.[1]
+            : null;
         const response = await fetch(
           `https://zone01normandie.org/api/graphql-engine/v1/graphql`,
           {
             method: "POST",
             headers: {
-              Authorization:
-                "Bearer " + document.cookie.match(/session=([^;]+)/)?.[1],
+              Authorization: sessionCookie ? `Bearer ${sessionCookie}` : "",
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ query }),
@@ -167,7 +170,7 @@ export const ProfileGrid = ({ id }: ProfileGridProps) => {
           <Card2 data={data} />
           <Card3 data={data?.user} />
           <Card4 data={data?.user} />
-          <Card5 data={{transactions: data?.transaction}} />
+          <Card5 data={{ transactions: data?.transaction }} />
           <Card6
             data={{
               xp: {
@@ -336,6 +339,11 @@ export const Card1 = (props: any) => {
   const [level, setLevel] = useState<any>(null);
 
   useEffect(() => {
+    const sessionCookie =
+      typeof window !== "undefined"
+        ? document.cookie.match(/session=([^;]+)/)?.[1]
+        : undefined;
+
     let query = `query {
     event_user(where: { userLogin: { _eq: ${props?.data[0]?.login} }, eventId: { _eq: 303 } }) {
     level
@@ -349,8 +357,7 @@ export const Card1 = (props: any) => {
           {
             method: "POST",
             headers: {
-              Authorization:
-                "Bearer " + document.cookie.match(/session=([^;]+)/)?.[1],
+              Authorization: "Bearer " + sessionCookie,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ query }),
@@ -442,12 +449,23 @@ export const Card2 = (data: any) => {
   // Scales
   const xScale = d3
     .scaleTime()
-    .domain(d3.extent(cumulativeChartData, (d: { date: Date }) => d.date) as [Date, Date])
+    .domain(
+      d3.extent(cumulativeChartData, (d: { date: Date }) => d.date) as [
+        Date,
+        Date,
+      ]
+    )
     .range([margin.left, width - margin.right]);
 
   const yScale = d3
     .scaleLinear()
-    .domain([0, d3.max(cumulativeChartData, (d: { cumulativeXP: number }) => d.cumulativeXP) || 0])
+    .domain([
+      0,
+      d3.max(
+        cumulativeChartData,
+        (d: { cumulativeXP: number }) => d.cumulativeXP
+      ) || 0,
+    ])
     .nice()
     .range([height - margin.bottom, margin.top]);
 
@@ -512,15 +530,17 @@ export const Card2 = (data: any) => {
           />
 
           {/* Data points */}
-            {cumulativeChartData.map((d: { date: Date; cumulativeXP: number }, index: number) => (
-            <circle
-              key={index}
-              cx={xScale(d.date)}
-              cy={yScale(d.cumulativeXP)}
-              r="3"
-              fill="var(--purpleFill)"
-            />
-            ))}
+          {cumulativeChartData.map(
+            (d: { date: Date; cumulativeXP: number }, index: number) => (
+              <circle
+                key={index}
+                cx={xScale(d.date)}
+                cy={yScale(d.cumulativeXP)}
+                r="3"
+                fill="var(--purpleFill)"
+              />
+            )
+          )}
         </svg>
       </div>
     </GridCard>
@@ -600,14 +620,18 @@ export const Card4 = (props: any) => {
     }`;
 
     const fetchData = async () => {
+      
       try {
+        const sessionCookie = typeof window !== 'undefined' 
+        ? document.cookie.match(/session=([^;]+)/)?.[1] 
+        : undefined;
         const response = await fetch(
           `https://zone01normandie.org/api/graphql-engine/v1/graphql`,
           {
             method: "POST",
             headers: {
               Authorization:
-                "Bearer " + document.cookie.match(/session=([^;]+)/)?.[1],
+                "Bearer " + sessionCookie,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ query }),
@@ -868,7 +892,10 @@ export const Card5 = (data: any) => {
 
           {/* Line path */}
           <path
-            d={line(chartData.map(d => [xScale(d.date), yScale(d.count)])) || ""}
+            d={
+              line(chartData.map((d) => [xScale(d.date), yScale(d.count)])) ||
+              ""
+            }
             fill="none"
             stroke="var(--blue)"
             strokeWidth="2"

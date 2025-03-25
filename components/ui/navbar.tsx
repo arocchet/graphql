@@ -34,7 +34,11 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
       window.location.href = "/";
     };
 
-    const hasSessionCookie = document.cookie.includes("session=");
+    const hasSessionCookie =
+      typeof document !== "undefined"
+        ? document.cookie.includes("session=")
+      : null;
+
 
     return (
       <Navbar
