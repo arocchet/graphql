@@ -868,7 +868,7 @@ export const Card5 = (data: any) => {
 
           {/* Line path */}
           <path
-            d={line(chartData) || ""}
+            d={line(chartData.map(d => [xScale(d.date), yScale(d.count)])) || ""}
             fill="none"
             stroke="var(--blue)"
             strokeWidth="2"
