@@ -13,6 +13,7 @@ import {
   Divider,
   cn,
   NavbarProps,
+  Button,
 } from "@heroui/react";
 import { Logo } from "../icons";
 import { ThemeSwitch } from "../theme-switch";
@@ -27,6 +28,13 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
         setIsMenuOpen(false);
       }, 100)
     };
+
+    const handleLogout = () => {
+      document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      window.location.href = "/";
+    };
+
+    const hasSessionCookie = document.cookie.includes("session=");
 
     return (
       <Navbar
@@ -60,8 +68,10 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
         <NavbarContent className="hidden md:flex" justify="center">
           {siteConfig.navItems.map((item, index) => (
             <NavbarItem key={index}>
-              <Link className="text-[var(--textMinimal)]" href={item.href} size="sm">
-                {item.label}
+              <Link className="text-[var(--textMinimal)]" href={item.href === "/login" && hasSessionCookie ? "/dashboard" : item.href} size="sm">
+                {item.label === "Connexion" && hasSessionCookie
+                  ? "Dashboard"
+                  : item.label}
               </Link>
             </NavbarItem>
           ))}
@@ -72,6 +82,18 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
           <NavbarItem>
             <ThemeSwitch />
           </NavbarItem>
+          {hasSessionCookie && (
+            <NavbarItem>
+              <Button
+                size="sm"
+                color="danger"
+                onClick={handleLogout}
+                className="ml-2 -mt-6"
+              >
+                Logout
+              </Button>
+            </NavbarItem>
+          )}
         </NavbarContent>
 
         {/* Moved NavbarMenuToggle to the right side */}
@@ -103,17 +125,31 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
                 <div key={index}>
                   <Link
                     className="text-medium text-default-500 w-full py-2"
-                    href={item.href}
+                    href={item.href === "/login" && hasSessionCookie ? "/dashboard" : item.href}
                     size="md"
                     onClick={handleLinkClick}
                   >
-                    {item.label}
+                    {item.label === "Connexion" && hasSessionCookie
+                      ? "Dashboard"
+                      : item.label}
                   </Link>
                   {index < siteConfig.navItems.length - 1 && (
                     <Divider className="opacity-50" />
                   )}
                 </div>
               ))}
+              {hasSessionCookie && (
+                <div>
+                  <Button
+                    size="sm"
+                    color="danger"
+                    onClick={handleLogout}
+                    className="w-full"
+                  >
+                    Logout
+                  </Button>
+                </div>
+              )}
             </div>
           </NavbarMenuItem>
         </NavbarMenu>
